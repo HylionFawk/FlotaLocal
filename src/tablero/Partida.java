@@ -50,8 +50,16 @@ public class Partida {
 	 * @return		resultado de marcar la casilla: AGUA, ya TOCADO, ya HUNDIDO, identidad del barco recien hundido
 	 */	
     public int pruebaCasilla(int f, int c) {
-        // POR IMPLEMENTAR
-    	return 0;
+        switch (mar[f][c]) {
+        	case AGUA:
+        		return AGUA;
+        	case TOCADO:
+        		return TOCADO;
+        	case HUNDIDO:
+        		return HUNDIDO;
+        }
+        //FIXME Antes de devolver el barco hay que pasar el valor a tocado o hundido
+    	return mar[f][c];
     }
     
 
