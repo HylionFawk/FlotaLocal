@@ -244,7 +244,7 @@ public class Juego {
             		partida= new Partida(NUMFILAS, NUMCOLUMNAS, NUMBARCOS);
             		break;
             	case SOLUCION:
-            		guiTablero.muestraSolucion();
+            		guiTablero.muestraSolucion();//ffeededefewe
             		break;
             }
 		} // end actionPerformed
