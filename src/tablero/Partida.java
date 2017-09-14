@@ -50,6 +50,8 @@ public class Partida {
 	 * @return		resultado de marcar la casilla: AGUA, ya TOCADO, ya HUNDIDO, identidad del barco recien hundido
 	 */	
     public int pruebaCasilla(int f, int c) {
+    	disparos++;
+    	
         switch (mar[f][c]) {
         	case AGUA:
         		return AGUA;
@@ -58,10 +60,12 @@ public class Partida {
         	case HUNDIDO:
         		return HUNDIDO;
         }
+        
         int res= mar[f][c];
         if(barcos.get(res).tocaBarco()) {
-        	//Hundir barco en mar[][]
+        	hundirBarco(barcos.get(res));
         	return res;
+        	
         } else {
         	mar[f][c]=-2;
         	return TOCADO; //El barco ha sido tocado
@@ -93,6 +97,30 @@ public class Partida {
     
 
 	/********************************    METODOS PRIVADOS  ********************************************/
+	
+	/**
+	 * Hunde un barco en la matriz mar con los datos del barco en cuestion
+	 * @param barco Barco a hundir
+	 */
+	private void hundirBarco(Barco barco) {
+		char orientacion= barco.getOrientacion();
+		
+		int tamanyo= barco.getTamanyo();
+		int fila= barco.getFilaInicial();
+		int columna= barco.getColumnaInicial();
+		
+		
+		for(int i=0; i<tamanyo; i++) {
+			if (orientacion=='H') {
+				mar[fila][columna+i]=HUNDIDO;
+			} else {
+				mar[fila+i][columna]=HUNDIDO;
+			}
+		}
+		quedan--;
+	}
+	
+	
     
 	/**
 	 * Inicia todas las casillas del tablero a AGUA
