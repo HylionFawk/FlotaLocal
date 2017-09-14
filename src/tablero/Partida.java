@@ -58,8 +58,14 @@ public class Partida {
         	case HUNDIDO:
         		return HUNDIDO;
         }
-        //FIXME Antes de devolver el barco hay que pasar el valor a tocado o hundido
-    	return mar[f][c];
+        int res= mar[f][c];
+        if(barcos.get(res).tocaBarco()) {
+        	//Hundir barco en mar[][]
+        	return res;
+        } else {
+        	mar[f][c]=-2;
+        	return TOCADO; //El barco ha sido tocado
+        }
     }
     
 

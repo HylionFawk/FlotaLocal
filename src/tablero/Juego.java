@@ -277,7 +277,7 @@ public class Juego {
 			case -2:
 				guiTablero.pintaBoton(boton , Color.ORANGE);
 				break;
-			case -3:
+			case -3: //FIXME pruebaCasilla al devolver -3 no afecta a Juego, pues ya esta hundido el barco, es cuando devuelve un número positivo(Un barco) cuando hay que hundirlo
 				//guiTablero.pintaBarcoHundido();
 				break;
 			}
