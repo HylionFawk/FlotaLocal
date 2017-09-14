@@ -128,10 +128,10 @@ public class Juego {
 			for (int i=0; i<nf; i++){
             	for (int j=0; j<nc; j++){
             		boton = new JButton();
-            		boton.putClientProperty("Fila",nf);
-            		boton.putClientProperty("Columna",nc);
+            		boton.putClientProperty("Fila",i);
+            		boton.putClientProperty("Columna",j);
             		boton.addActionListener(new ButtonListener());
-            		grid.add(boton);
+            		grid.add(boton); 
             		buttons[i][j] = boton;
             	}
             }
@@ -176,16 +176,21 @@ public class Juego {
 			String[] datos = cadenaBarco.split("#");
             int filaIni = Integer.parseInt(datos[0]);
             int colIni = Integer.parseInt(datos[1]);
-            String orientacion = datos[2];
+            char orientacion =  datos[2].charAt(0);
             int tamanyo = Integer.parseInt(datos[3]);
             
-            switch (orientacion){
-            case "H":
+            JButton boton;
+            for(int i=0; i<tamanyo; i++) {
             	
-            	break;
-            case "V":
-            	
-            }
+    			if (orientacion=='H') {
+    				boton= buttons[filaIni][colIni+i];
+    			} else {
+    				boton= buttons[filaIni+i][colIni];
+    			}
+    			pintaBoton(boton, Color.RED);
+    		}
+    		quedan--;
+            
 		} // end pintaBarcoHundido
 
 		/**
@@ -244,7 +249,7 @@ public class Juego {
             		partida= new Partida(NUMFILAS, NUMCOLUMNAS, NUMBARCOS);
             		break;
             	case SOLUCION:
-            		guiTablero.muestraSolucion();//ffeededefewe
+            		guiTablero.muestraSolucion();
             		break;
             }
 		} // end actionPerformed
@@ -277,10 +282,13 @@ public class Juego {
 			case -2:
 				guiTablero.pintaBoton(boton , Color.ORANGE);
 				break;
-			case -3: //FIXME pruebaCasilla al devolver -3 no afecta a Juego, pues ya esta hundido el barco, es cuando devuelve un número positivo(Un barco) cuando hay que hundirlo
-				//guiTablero.pintaBarcoHundido();
+			default: 
+				if(res>=0)
+					guiTablero.pintaBarcoHundido(partida.getBarco(res));
 				break;
 			}
+			boton.removeActionListener(this); //Se elimina el boton del listener para que no suba el número de intentos al repetir casilla
+			guiTablero.cambiaEstado("Intentos: " + ++disparos + "    Barcos restantes: " + quedan);
         } // end actionPerformed
 
 	} // end class ButtonListener

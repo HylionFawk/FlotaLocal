@@ -60,7 +60,7 @@ public class Partida {
         	case HUNDIDO:
         		return HUNDIDO;
         }
-        
+        //Se comprueba si el barco se hunde, o se vuelve a tocar
         int res= mar[f][c];
         if(barcos.get(res).tocaBarco()) {
         	hundirBarco(barcos.get(res));
