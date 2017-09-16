@@ -122,18 +122,35 @@ public class Juego {
 		private void anyadeGrid(int nf, int nc) {
 			buttons = new JButton[nf][nc];
             JPanel grid = new JPanel();
-            grid.setLayout(new GridLayout(nf, nc));
+            grid.setLayout(new GridLayout(nf+1, nc+1));
             JButton boton;
+            JLabel label;
                     
-			for (int i=0; i<nf; i++){
-            	for (int j=0; j<nc; j++){
-            		boton = new JButton();
-            		boton.putClientProperty("Fila",i);
-            		boton.putClientProperty("Columna",j);
-            		boton.addActionListener(new ButtonListener());
-            		grid.add(boton); 
-            		buttons[i][j] = boton;
+			for (int fila=0; fila<=nf; fila++){
+				
+            	for (int col=0; col<=nc; col++){
+            		
+            		if(fila==0 && (col==0 || col==nc)) { //Pone espacio en blanco
+            			grid.add(new JLabel());
+            		} else if(fila==0 && (col!=0 || col!=nc)) { //Pone los numero de las columnas en la fila 0
+                		label= new JLabel(Integer.toString(col));
+                		grid.add(label);
+                	} else if(fila>=1 && (col==0 || col==nc)) { //Pone el nombre de las columnas en las columnas 0 y última
+                		char letra= (char) (fila+64);
+                		label= new JLabel(Character.toString(letra));
+                		grid.add(label);
+                	} else if (fila>0 && col > 0 && col< nc) {
+                		boton = new JButton();
+                		boton.putClientProperty("Fila",fila);
+                		boton.putClientProperty("Columna",col);
+                		boton.addActionListener(new ButtonListener());
+                		grid.add(boton); 
+                		buttons[fila-1][col-1] = boton;
+                	}
             	}
+            	
+            	
+            	
             }
 			frame.getContentPane().add(grid, BorderLayout.CENTER);
 		} // end anyadeGrid
@@ -163,7 +180,21 @@ public class Juego {
 		 * Muestra la solucion de la partida y marca la partida como finalizada
 		 */
 		public void muestraSolucion() {
-            
+			
+			//Primero se pintan todos los botones de azul
+			for (int fila=0; fila<NUMFILAS; fila++) {
+				for (int col=0; col<NUMCOLUMNAS; col++) {
+					pintaBoton(buttons[fila][col], Color.CYAN);
+					buttons[fila][col].removeActionListener( buttons[fila][col].getActionListeners()[0] ); //Remueve el action
+				}
+			}
+			
+			//Ahora se pintan solo los botones que sean barcos de rojo
+			for(String idBarco : partida.getSolucion()) {
+				pintaBarcoHundido(idBarco);
+			}
+			
+            partida.getSolucion();
 		} // end muestraSolucion
 
 
