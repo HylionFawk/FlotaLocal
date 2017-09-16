@@ -54,6 +54,7 @@ public class Partida {
         	case AGUA:
         		return AGUA;
         	case TOCADO:
+        		System.out.println("tocado");
         		return TOCADO;
         	case HUNDIDO:
         		return HUNDIDO;

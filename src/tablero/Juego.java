@@ -128,8 +128,8 @@ public class Juego {
 			for (int i=0; i<nf; i++){
             	for (int j=0; j<nc; j++){
             		boton = new JButton();
-            		boton.putClientProperty("Fila",nf);
-            		boton.putClientProperty("Columna",nc);
+            		boton.putClientProperty("Fila",i);
+            		boton.putClientProperty("Columna",j);
             		boton.addActionListener(new ButtonListener());
             		grid.add(boton);
             		buttons[i][j] = boton;
@@ -173,18 +173,27 @@ public class Juego {
 		 *                      "filaInicial#columnaInicial#orientacion#tamanyo"
 		 */
 		public void pintaBarcoHundido(String cadenaBarco) {
+			quedan--;
 			String[] datos = cadenaBarco.split("#");
             int filaIni = Integer.parseInt(datos[0]);
             int colIni = Integer.parseInt(datos[1]);
             String orientacion = datos[2];
             int tamanyo = Integer.parseInt(datos[3]);
             
+            JButton b;
             switch (orientacion){
             case "H":
-            	
+            	for (int i=colIni; i<colIni+tamanyo ;i++){
+            		b=buttons[filaIni][i];
+            		pintaBoton(b,Color.RED);
+            	}
             	break;
             case "V":
-            	
+            	for (int i=filaIni; i<filaIni+tamanyo; i++){
+            		b=buttons[i][colIni];
+            		pintaBoton(b,Color.RED);
+            	}
+            	break;
             }
 		} // end pintaBarcoHundido
 
@@ -269,6 +278,7 @@ public class Juego {
 			int fila = (int) boton.getClientProperty("Fila");
 			int columna = (int) boton.getClientProperty("Columna");
 			int res = partida.pruebaCasilla(fila, columna);
+			disparos++;
 			
 			switch (res){
 			case -1:
@@ -276,11 +286,14 @@ public class Juego {
 				break;
 			case -2:
 				guiTablero.pintaBoton(boton , Color.ORANGE);
+				
 				break;
 			case -3:
 				//guiTablero.pintaBarcoHundido();
-				break;
+				break;				
 			}
+			guiTablero.cambiaEstado("Intentos: " + disparos + "    Barcos restantes: " + quedan);
+			
         } // end actionPerformed
 
 	} // end class ButtonListener
