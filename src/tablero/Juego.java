@@ -12,17 +12,17 @@ import javax.swing.*;
 public class Juego {
 
 	/**
-	 * Implementa el juego 'Hundir la flota' mediante una interfaz gráfica (GUI)
+	 * Implementa el juego 'Hundir la flota' mediante una interfaz grÃ¡fica (GUI)
 	 */
 
 	/** Parametros por defecto de una partida */
 	public static final int NUMFILAS=8, NUMCOLUMNAS=8, NUMBARCOS=6;
 	public static final String SALIR="Salir", NUEVAPARTIDA="Nueva Partida", SOLUCION="Solucion";
 
-	private GuiTablero guiTablero = null;			// El juego se encarga de crear y modificar la interfaz gráfica
+	private GuiTablero guiTablero = null;			// El juego se encarga de crear y modificar la interfaz grÃ¡fica
 	private Partida partida = null;                 // Objeto con los datos de la partida en juego
 	
-	/** Atributos de la partida guardados en el juego para simplificar su implementación */
+	/** Atributos de la partida guardados en el juego para simplificar su implementaciÃ³n */
 	private int quedan = NUMBARCOS, disparos = 0;
 	
 
@@ -121,51 +121,35 @@ public class Juego {
 		 */
 		private void anyadeGrid(int nf, int nc) {
 			buttons = new JButton[nf][nc];
-            JPanel grid = new JPanel();
-            grid.setLayout(new GridLayout(nf+1, nc+1));
-            JButton boton;
-            JLabel label;
-                    
-<<<<<<< HEAD
-			for (int i=0; i<nf; i++){
-            	for (int j=0; j<nc; j++){
-            		boton = new JButton();
-            		boton.putClientProperty("Fila",i);
-            		boton.putClientProperty("Columna",j);
-            		boton.addActionListener(new ButtonListener());
-            		grid.add(boton);
-            		buttons[i][j] = boton;
-=======
-			for (int fila=0; fila<=nf; fila++){
-				
-            	for (int col=0; col<=nc; col++){
-            		
-            		if(fila==0 && (col==0 || col==nc)) { //Pone espacio en blanco
-            			grid.add(new JLabel());
-            		} else if(fila==0 && (col!=0 || col!=nc)) { //Pone los numero de las columnas en la fila 0
-                		label= new JLabel(Integer.toString(col));
-                		grid.add(label);
-                	} else if(fila>=1 && (col==0 || col==nc)) { //Pone el nombre de las columnas en las columnas 0 y �ltima
-                		char letra= (char) (fila+64);
-                		label= new JLabel(Character.toString(letra));
-                		grid.add(label);
-                	} else if (fila>0 && col > 0 && col< nc) {
-                		boton = new JButton();
-                		boton.putClientProperty("Fila",fila);
-                		boton.putClientProperty("Columna",col);
-                		boton.addActionListener(new ButtonListener());
-                		grid.add(boton); 
-                		buttons[fila-1][col-1] = boton;
-                	}
->>>>>>> 7aa859b2cceaedbdb5e56b342b39df69bd77b0d9
-            	}
-            	
-            	
-            	
-            }
+          		JPanel grid = new JPanel();
+            		grid.setLayout(new GridLayout(nf+1, nc+1));
+            		JButton boton;
+            		JLabel label;
+            
+		    for (int fila=0; fila<=nf; fila++){
+			for (int col=0; col<=nc+1; col++){
+				if(fila==0 && (col==0 || col==nc+1)) { //Pone espacio en blanco
+					grid.add(new JLabel());
+				} else if (fila==0 && (col!=0 || col!=nc+1)){ //Pone numeros
+					label= new JLabel(Integer.toString(col));
+					grid.add(label);
+				} else if(fila>=1 && (col==0 || col==nc+1)) { //Pone el nombre de las columnas en las columnas 0 y �ltima
+					char letra= (char) (fila+64);
+					label= new JLabel(Character.toString(letra));
+					grid.add(label);
+				} else if (fila>0 && col > 0 && col< nc+1){
+					boton = new JButton();
+					boton.putClientProperty("Fila",fila-1);
+					boton.putClientProperty("Columna",col-1);
+					boton.addActionListener(new ButtonListener());
+					grid.add(boton); 
+					buttons[fila-1][col-1] = boton;
+				}
+			}
+		    }
+
 			frame.getContentPane().add(grid, BorderLayout.CENTER);
 		} // end anyadeGrid
-
 
 		/**
 		 * Anyade el panel de estado al tablero
@@ -175,7 +159,7 @@ public class Juego {
 			JPanel panelEstado = new JPanel();
 			estado = new JLabel(cadena);
 			panelEstado.add(estado);
-			// El panel de estado queda en la posición SOUTH del frame
+			// El panel de estado queda en la posiciÃ³n SOUTH del frame
 			frame.getContentPane().add(panelEstado, BorderLayout.SOUTH);
 		} // end anyadePanel Estado
 
@@ -255,19 +239,19 @@ public class Juego {
 		} // end pintaBarcoHundido
 
 		/**
-		 * Pinta un botón de un color dado
+		 * Pinta un botÃ³n de un color dado
 		 * @param b			boton a pintar
 		 * @param color		color a usar
 		 */
 		public void pintaBoton(JButton b, Color color) {
 			b.setBackground(color);
-			// El siguiente código solo es necesario en Mac OS X
+			// El siguiente cÃ³digo solo es necesario en Mac OS X
 			b.setOpaque(true);
 			b.setBorderPainted(false);
 		} // end pintaBoton
 
 		/**
-		 * Limpia las casillas del tablero pintándolas del gris por defecto
+		 * Limpia las casillas del tablero pintÃ¡ndolas del gris por defecto
 		 */
 		public void limpiaTablero() {
 			for (int i = 0; i < numFilas; i++) {
@@ -358,7 +342,7 @@ public class Juego {
 					guiTablero.pintaBarcoHundido(partida.getBarco(res));
 				break;
 			}
-			boton.removeActionListener(this); //Se elimina el boton del listener para que no suba el n�mero de intentos al repetir casilla
+			boton.removeActionListener(this); //Se elimina el boton del listener para que no suba el número de intentos al repetir casilla
 			guiTablero.cambiaEstado("Intentos: " + ++disparos + "    Barcos restantes: " + quedan);
 >>>>>>> 7aa859b2cceaedbdb5e56b342b39df69bd77b0d9
         } // end actionPerformed
