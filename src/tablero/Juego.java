@@ -199,30 +199,12 @@ public class Juego {
 		 *                      "filaInicial#columnaInicial#orientacion#tamanyo"
 		 */
 		public void pintaBarcoHundido(String cadenaBarco) {
-			quedan--;
 			String[] datos = cadenaBarco.split("#");
             int filaIni = Integer.parseInt(datos[0]);
             int colIni = Integer.parseInt(datos[1]);
             char orientacion =  datos[2].charAt(0);
             int tamanyo = Integer.parseInt(datos[3]);
             
-<<<<<<< HEAD
-            JButton b;
-            switch (orientacion){
-            case "H":
-            	for (int i=colIni; i<colIni+tamanyo ;i++){
-            		b=buttons[filaIni][i];
-            		pintaBoton(b,Color.RED);
-            	}
-            	break;
-            case "V":
-            	for (int i=filaIni; i<filaIni+tamanyo; i++){
-            		b=buttons[i][colIni];
-            		pintaBoton(b,Color.RED);
-            	}
-            	break;
-            }
-=======
             JButton boton;
             for(int i=0; i<tamanyo; i++) {
             	
@@ -235,7 +217,6 @@ public class Juego {
     		}
     		quedan--;
             
->>>>>>> 7aa859b2cceaedbdb5e56b342b39df69bd77b0d9
 		} // end pintaBarcoHundido
 
 		/**
@@ -319,7 +300,6 @@ public class Juego {
 			int fila = (int) boton.getClientProperty("Fila");
 			int columna = (int) boton.getClientProperty("Columna");
 			int res = partida.pruebaCasilla(fila, columna);
-			disparos++;
 			
 			switch (res){
 			case -1:
@@ -327,24 +307,14 @@ public class Juego {
 				break;
 			case -2:
 				guiTablero.pintaBoton(boton , Color.ORANGE);
-				
 				break;
-<<<<<<< HEAD
-			case -3:
-				//guiTablero.pintaBarcoHundido();
-				break;				
-			}
-			guiTablero.cambiaEstado("Intentos: " + disparos + "    Barcos restantes: " + quedan);
-			
-=======
 			default: 
 				if(res>=0)
 					guiTablero.pintaBarcoHundido(partida.getBarco(res));
 				break;
 			}
-			boton.removeActionListener(this); //Se elimina el boton del listener para que no suba el número de intentos al repetir casilla
+			boton.removeActionListener(this); //Se elimina el boton del listener para que no suba el n�mero de intentos al repetir casilla
 			guiTablero.cambiaEstado("Intentos: " + ++disparos + "    Barcos restantes: " + quedan);
->>>>>>> 7aa859b2cceaedbdb5e56b342b39df69bd77b0d9
         } // end actionPerformed
 
 	} // end class ButtonListener
