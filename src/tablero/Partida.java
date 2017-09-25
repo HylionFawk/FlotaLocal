@@ -51,26 +51,24 @@ public class Partida {
 	 */	
     public int pruebaCasilla(int f, int c) {
     	disparos++;
-    	
-        switch (mar[f][c]) {
-        	case AGUA:
-        		return AGUA;
-        	case TOCADO:
-        		System.out.println("tocado");
-        		return TOCADO;
-        	case HUNDIDO:
-        		return HUNDIDO;
-        }
-        //Se comprueba si el barco se hunde, o se vuelve a tocar
         int res= mar[f][c];
-        if(barcos.get(res).tocaBarco()) {
-        	hundirBarco(barcos.get(res));
-        	return res;
-        	
-        } else {
-        	mar[f][c]=-2;
-        	return TOCADO; //El barco ha sido tocado
+        
+        if(res==AGUA) {
+        	return AGUA;
         }
+        
+        if(mar[f][c]>AGUA) { //Si da 0 o más es un barco
+        
+        	//Se toca el barco
+        	if(barcos.get(res).tocaBarco()) {//Si el barco se hunde se entra y se hunde
+        		hundirBarco(barcos.get(res));
+        		return res;        	
+        	}
+        	//No se hunde, pero si se toca la posición
+        	mar[f][c]=TOCADO;
+        }
+        
+        return mar[f][c]; //El barco ha sido tocado
     }
     
 

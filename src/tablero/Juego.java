@@ -93,15 +93,15 @@ public class Juego {
 			
 			MenuListener listenerMenu= new MenuListener();
 			
-			JMenuItem salir= new JMenuItem(SALIR);
+			JMenuItem salir= new JMenuItem(SALIR); //Se crea el boton Salir
 			salir.setActionCommand(SALIR);
 			salir.addActionListener(listenerMenu);
 			
-			JMenuItem nuevaPartida= new JMenuItem(NUEVAPARTIDA);
+			JMenuItem nuevaPartida= new JMenuItem(NUEVAPARTIDA); //Se crea el boton NuevaPartida
 			nuevaPartida.setActionCommand(NUEVAPARTIDA);
 			nuevaPartida.addActionListener(listenerMenu);
 			
-			JMenuItem solucion= new JMenuItem(SOLUCION);
+			JMenuItem solucion= new JMenuItem(SOLUCION); //Se crea el boton Solucion
 			solucion.setActionCommand(SOLUCION);
 			solucion.addActionListener(listenerMenu);
 			
@@ -121,31 +121,35 @@ public class Juego {
 		 */
 		private void anyadeGrid(int nf, int nc) {
 			buttons = new JButton[nf][nc];
-          		JPanel grid = new JPanel();
-            		grid.setLayout(new GridLayout(nf+1, nc+1));
-            		JButton boton;
-            		JLabel label;
+          	JPanel grid = new JPanel();
+            grid.setLayout(new GridLayout(nf+1, nc+1));
+            JButton boton;
+            JLabel label;
             
-		    for (int fila=0; fila<=nf; fila++){
-			for (int col=0; col<=nc+1; col++){
-				if(fila==0 && (col==0 || col==nc+1)) { //Pone espacio en blanco
-					grid.add(new JLabel());
-				} else if (fila==0 && (col!=0 || col!=nc+1)){ //Pone numeros
-					label= new JLabel(Integer.toString(col));
-					grid.add(label);
-				} else if(fila>=1 && (col==0 || col==nc+1)) { //Pone el nombre de las columnas en las columnas 0 y �ltima
-					char letra= (char) (fila+64);
-					label= new JLabel(Character.toString(letra));
-					grid.add(label);
-				} else if (fila>0 && col > 0 && col< nc+1){
-					boton = new JButton();
-					boton.putClientProperty("Fila",fila-1);
-					boton.putClientProperty("Columna",col-1);
-					boton.addActionListener(new ButtonListener());
-					grid.add(boton); 
-					buttons[fila-1][col-1] = boton;
-				}
-			}
+		    for (int fila=0; fila<=nf; fila++){ 
+		    	for (int col=0; col<=nc+1; col++){
+		    		if(fila==0 && (col==0 || col==nc+1)) { //Pone espacio en blanco
+		    			grid.add(new JLabel());
+		    			
+		    		} else if (fila==0 && (col!=0 || col!=nc+1)){ //Pone numeros
+		    			label= new JLabel(Integer.toString(col), JLabel.CENTER);
+		    			grid.add(label);
+		    			
+		    		} else if(fila>=1 && (col==0 || col==nc+1)) { //Pone el nombre de las columnas en las columnas 0 y ultima
+		    			char letra= (char) (fila+64);
+		    			label= new JLabel(Character.toString(letra), JLabel.CENTER);
+		    			grid.add(label);
+		    			
+		    		} else if (fila>0 && col > 0 && col< nc+1){ //Pone el boton
+		    			
+		    			boton = new JButton();
+		    			boton.putClientProperty("Fila",fila-1);
+		    			boton.putClientProperty("Columna",col-1);
+		    			boton.addActionListener(new ButtonListener());
+		    			grid.add(boton); 
+		    			buttons[fila-1][col-1] = boton;
+		    		}
+		    	}
 		    }
 
 			frame.getContentPane().add(grid, BorderLayout.CENTER);
@@ -183,13 +187,10 @@ public class Juego {
 					buttons[fila][col].removeActionListener( buttons[fila][col].getActionListeners()[0] ); //Remueve el action
 				}
 			}
-			
 			//Ahora se pintan solo los botones que sean barcos de rojo
 			for(String idBarco : partida.getSolucion()) {
 				pintaBarcoHundido(idBarco);
 			}
-			
-            partida.getSolucion();
 		} // end muestraSolucion
 
 
@@ -206,7 +207,7 @@ public class Juego {
             int tamanyo = Integer.parseInt(datos[3]);
             
             JButton boton;
-            for(int i=0; i<tamanyo; i++) {
+            for(int i=0; i<tamanyo; i++) { //Según la orientación se pinta en un sentido u otro
             	
     			if (orientacion=='H') {
     				boton= buttons[filaIni][colIni+i];
@@ -215,7 +216,7 @@ public class Juego {
     			}
     			pintaBoton(boton, Color.RED);
     		}
-    		quedan--;
+    		
             
 		} // end pintaBarcoHundido
 
@@ -240,6 +241,7 @@ public class Juego {
 					buttons[i][j].setBackground(null);
 					buttons[i][j].setOpaque(true);
 					buttons[i][j].setBorderPainted(true);
+					buttons[i][j].addActionListener(new ButtonListener()); //Se vuelve a añadir el escuchador del boton
 				}
 			}
 		} // end limpiaTablero
@@ -268,10 +270,14 @@ public class Juego {
 		public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
             	case SALIR:
+            		guiTablero.liberaRecursos();
             		System.exit(0);
             		break;
             	case NUEVAPARTIDA:
             		guiTablero.limpiaTablero();
+            		quedan=NUMBARCOS;
+            		disparos=0;
+            		guiTablero.cambiaEstado("Intentos: " + disparos + "    Barcos restantes: " + quedan);
             		partida= new Partida(NUMFILAS, NUMCOLUMNAS, NUMBARCOS);
             		break;
             	case SOLUCION:
@@ -301,19 +307,25 @@ public class Juego {
 			int columna = (int) boton.getClientProperty("Columna");
 			int res = partida.pruebaCasilla(fila, columna);
 			
+			
+			
 			switch (res){
-			case -1:
+			case -1: //Se ha tocado a agua
 				guiTablero.pintaBoton(boton , Color.CYAN);
 				break;
-			case -2:
+			case -2: //Se ha tocado un barco
 				guiTablero.pintaBoton(boton , Color.ORANGE);
 				break;
 			default: 
-				if(res>=0)
+				if(res>=0) { //Se ha tocado un barco y pasa a hundido
+					quedan--;
 					guiTablero.pintaBarcoHundido(partida.getBarco(res));
+					if(quedan==0) { //Se llama cuando acaba la partida
+						guiTablero.muestraSolucion();
+					}
+				}
 				break;
 			}
-			boton.removeActionListener(this); //Se elimina el boton del listener para que no suba el n�mero de intentos al repetir casilla
 			guiTablero.cambiaEstado("Intentos: " + ++disparos + "    Barcos restantes: " + quedan);
         } // end actionPerformed
 
