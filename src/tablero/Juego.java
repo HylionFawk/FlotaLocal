@@ -125,6 +125,7 @@ public class Juego {
             grid.setLayout(new GridLayout(nf+1, nc+1));
             JButton boton;
             JLabel label;
+            ButtonListener buttonList = new ButtonListener();
             
 		    for (int fila=0; fila<=nf; fila++){ 
 		    	for (int col=0; col<=nc+1; col++){
@@ -145,7 +146,7 @@ public class Juego {
 		    			boton = new JButton();
 		    			boton.putClientProperty("Fila",fila-1);
 		    			boton.putClientProperty("Columna",col-1);
-		    			boton.addActionListener(new ButtonListener());
+		    			boton.addActionListener(buttonList);
 		    			grid.add(boton); 
 		    			buttons[fila-1][col-1] = boton;
 		    		}
