@@ -185,7 +185,6 @@ public class Juego {
 			for (int fila=0; fila<NUMFILAS; fila++) {
 				for (int col=0; col<NUMCOLUMNAS; col++) {
 					pintaBoton(buttons[fila][col], Color.CYAN);
-					buttons[fila][col].removeActionListener( buttons[fila][col].getActionListeners()[0] ); //Remueve el action
 				}
 			}
 			//Ahora se pintan solo los botones que sean barcos de rojo
@@ -208,16 +207,18 @@ public class Juego {
             int tamanyo = Integer.parseInt(datos[3]);
             
             JButton boton;
-            for(int i=0; i<tamanyo; i++) { //Según la orientación se pinta en un sentido u otro
-            	
-    			if (orientacion=='H') {
-    				boton= buttons[filaIni][colIni+i];
-    			} else {
-    				boton= buttons[filaIni+i][colIni];
-    			}
-    			pintaBoton(boton, Color.RED);
-    		}
-    		
+            if(orientacion=='H') {
+            	for (int i=0; i<tamanyo; i++) {
+            		boton= buttons[filaIni][colIni+i];
+            		pintaBoton(boton, Color.RED);
+            	}		
+            }else {
+            	for (int i=0; i<tamanyo; i++) {
+            		boton= buttons[filaIni+i][colIni];
+            		pintaBoton(boton, Color.RED);
+            	}
+            }
+              		
             
 		} // end pintaBarcoHundido
 
@@ -242,7 +243,6 @@ public class Juego {
 					buttons[i][j].setBackground(null);
 					buttons[i][j].setOpaque(true);
 					buttons[i][j].setBorderPainted(true);
-					buttons[i][j].addActionListener(new ButtonListener()); //Se vuelve a añadir el escuchador del boton
 				}
 			}
 		} // end limpiaTablero
@@ -303,31 +303,32 @@ public class Juego {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JButton boton = (JButton)e.getSource();
-			int fila = (int) boton.getClientProperty("Fila");
-			int columna = (int) boton.getClientProperty("Columna");
-			int res = partida.pruebaCasilla(fila, columna);
 			
-			
-			
-			switch (res){
-			case -1: //Se ha tocado a agua
-				guiTablero.pintaBoton(boton , Color.CYAN);
-				break;
-			case -2: //Se ha tocado un barco
-				guiTablero.pintaBoton(boton , Color.ORANGE);
-				break;
-			default: 
-				if(res>=0) { //Se ha tocado un barco y pasa a hundido
-					quedan--;
-					guiTablero.pintaBarcoHundido(partida.getBarco(res));
-					if(quedan==0) { //Se llama cuando acaba la partida
-						guiTablero.muestraSolucion();
+			if (quedan!=0) {
+				JButton boton = (JButton)e.getSource();
+				int fila = (int) boton.getClientProperty("Fila");
+				int columna = (int) boton.getClientProperty("Columna");
+				int res = partida.pruebaCasilla(fila, columna);
+				
+				switch (res){
+				case -1: //Se ha tocado a agua
+					guiTablero.pintaBoton(boton , Color.CYAN);
+					break;
+				case -2: //Se ha tocado un barco
+					guiTablero.pintaBoton(boton , Color.ORANGE);
+					break;
+				default: 
+					if(res>=0) { //Se ha tocado un barco y pasa a hundido
+						quedan--;
+						guiTablero.pintaBarcoHundido(partida.getBarco(res));
+						if(quedan==0) { //Se llama cuando acaba la partida
+							guiTablero.muestraSolucion();
+						}
 					}
+					break;
 				}
-				break;
+				guiTablero.cambiaEstado("Intentos: " + ++disparos + "    Barcos restantes: " + quedan);
 			}
-			guiTablero.cambiaEstado("Intentos: " + ++disparos + "    Barcos restantes: " + quedan);
         } // end actionPerformed
 
 	} // end class ButtonListener
