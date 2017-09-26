@@ -57,14 +57,14 @@ public class Partida {
         	return AGUA;
         }
         
-        if(mar[f][c]>AGUA) { //Si da 0 o más es un barco
+        if(mar[f][c]>AGUA) { //Si da 0 o mï¿½s es un barco
         
         	//Se toca el barco
         	if(barcos.get(res).tocaBarco()) {//Si el barco se hunde se entra y se hunde
         		hundirBarco(barcos.get(res));
         		return res;        	
         	}
-        	//No se hunde, pero si se toca la posición
+        	//No se hunde, pero si se toca la posiciï¿½n
         	mar[f][c]=TOCADO;
         }
         
@@ -108,14 +108,14 @@ public class Partida {
 		int fila= barco.getFilaInicial();
 		int columna= barco.getColumnaInicial();
 		
-		
-		for(int i=0; i<tamanyo; i++) {
-			if (orientacion=='H') {
+		if (orientacion=='H') {
+			for (int i=0; i<tamanyo; i++)
 				mar[fila][columna+i]=HUNDIDO;
-			} else {
+		}else {
+			for (int i=0; i<tamanyo; i++)
 				mar[fila+i][columna]=HUNDIDO;
-			}
 		}
+			
 		quedan--;
 	}
 	
