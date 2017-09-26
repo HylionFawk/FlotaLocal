@@ -24,6 +24,7 @@ public class Juego {
 	
 	/** Atributos de la partida guardados en el juego para simplificar su implementaciÃ³n */
 	private int quedan = NUMBARCOS, disparos = 0;
+	private boolean enJuego;
 	
 
 	/**
@@ -41,6 +42,7 @@ public class Juego {
 	private void ejecuta() {
 		// Instancia la primera partida
 		partida = new Partida(NUMFILAS, NUMCOLUMNAS, NUMBARCOS);
+		enJuego=true;
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -127,32 +129,29 @@ public class Juego {
             JLabel label;
             ButtonListener buttonList = new ButtonListener();
             
-		    for (int fila=0; fila<=nf; fila++){ 
-		    	for (int col=0; col<=nc+1; col++){
-		    		if(fila==0 && (col==0 || col==nc+1)) { //Pone espacio en blanco
-		    			grid.add(new JLabel());
-		    			
-		    		} else if (fila==0 && (col!=0 || col!=nc+1)){ //Pone numeros
-		    			label= new JLabel(Integer.toString(col), JLabel.CENTER);
-		    			grid.add(label);
-		    			
-		    		} else if(fila>=1 && (col==0 || col==nc+1)) { //Pone el nombre de las columnas en las columnas 0 y ultima
-		    			char letra= (char) (fila+64);
-		    			label= new JLabel(Character.toString(letra), JLabel.CENTER);
-		    			grid.add(label);
-		    			
-		    		} else if (fila>0 && col > 0 && col< nc+1){ //Pone el boton
-		    			
-		    			boton = new JButton();
-		    			boton.putClientProperty("Fila",fila-1);
-		    			boton.putClientProperty("Columna",col-1);
-		    			boton.addActionListener(buttonList);
-		    			grid.add(boton); 
-		    			buttons[fila-1][col-1] = boton;
-		    		}
-		    	}
-		    }
-
+            grid.add(new JLabel());
+            for (int col=1; col<=nc; col++) {
+            	label= new JLabel(Integer.toString(col), JLabel.CENTER);
+    			grid.add(label);
+            }
+            grid.add(new JLabel());
+            
+            for (int fila=0; fila<nf; fila++) {
+            	char letra= (char) (fila+65);	
+    			label= new JLabel(Character.toString(letra), JLabel.CENTER);
+    			grid.add(label);
+    			for (int col=0; col<nc; col++) {
+    				boton = new JButton();
+	    			boton.putClientProperty("Fila",fila);
+	    			boton.putClientProperty("Columna",col);
+	    			boton.addActionListener(buttonList);
+	    			grid.add(boton); 
+	    			buttons[fila][col] = boton;
+    			}
+    			label= new JLabel(Character.toString(letra), JLabel.CENTER);
+    			grid.add(label);
+            }
+            
 			frame.getContentPane().add(grid, BorderLayout.CENTER);
 		} // end anyadeGrid
 
@@ -180,7 +179,7 @@ public class Juego {
 		 * Muestra la solucion de la partida y marca la partida como finalizada
 		 */
 		public void muestraSolucion() {
-			
+			enJuego=false;
 			//Primero se pintan todos los botones de azul
 			for (int fila=0; fila<NUMFILAS; fila++) {
 				for (int col=0; col<NUMCOLUMNAS; col++) {
@@ -245,6 +244,7 @@ public class Juego {
 					buttons[i][j].setBorderPainted(true);
 				}
 			}
+			enJuego=true;
 		} // end limpiaTablero
 
 		/**
@@ -304,7 +304,7 @@ public class Juego {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			if (quedan!=0) {
+			if (quedan!=0 && enJuego) {
 				JButton boton = (JButton)e.getSource();
 				int fila = (int) boton.getClientProperty("Fila");
 				int columna = (int) boton.getClientProperty("Columna");
