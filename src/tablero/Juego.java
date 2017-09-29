@@ -311,14 +311,14 @@ public class Juego {
 				int res = partida.pruebaCasilla(fila, columna);
 				
 				switch (res){
-				case -1: //Se ha tocado a agua
+				case Partida.AGUA: //Se ha tocado a agua
 					guiTablero.pintaBoton(boton , Color.CYAN);
 					break;
-				case -2: //Se ha tocado un barco
+				case Partida.TOCADO: //Se ha tocado un barco
 					guiTablero.pintaBoton(boton , Color.ORANGE);
 					break;
 				default: 
-					if(res>=0) { //Se ha tocado un barco y pasa a hundido
+					if(res>Partida.AGUA) { //Se ha tocado un barco y pasa a hundido
 						quedan--;
 						guiTablero.pintaBarcoHundido(partida.getBarco(res));
 						if(quedan==0) { //Se llama cuando acaba la partida
